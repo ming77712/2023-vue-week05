@@ -16,7 +16,7 @@ Object.keys(AllRules).forEach(rule => {
     defineRule(rule, AllRules[rule]);
   });
 
-loadLocaleFromURL('/zh_TW.json');
+loadLocaleFromURL('./zh_TW.json');
 
 configure({
     generateMessage: localize('zh_TW'),

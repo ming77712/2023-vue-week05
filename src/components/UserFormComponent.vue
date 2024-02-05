@@ -30,9 +30,8 @@ export default {
     methods: {
         ...mapActions(cartStore, ["getCart"]),
         createOrder() {
-
             if (this.carts.carts.length === 0) {
-                this.setSweetMessageError("購物車是空的 無法送出訂單~");
+                this.setSweetMessageError("購物車是空的 無法送出訂單");
                 Swal.fire(sweetMessage);
             } else {
                 const data = this.form;

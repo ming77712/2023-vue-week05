@@ -79,18 +79,30 @@ export default defineStore("cartStore", {
             });
         },
         removeCartAllItem() {
-            axios.delete(`${VITE_URL}/api/${VITE_PATH}/carts`).then((res) => {
-                Toast.fire({
-                    icon: "success",
-                    title: res.data.message,
+            Swal.fire({
+                title: "確定要清空購物車?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "確定",
+                cancelButtonText: "取消"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(`${VITE_URL}/api/${VITE_PATH}/carts`).then((res) => {
+                        Toast.fire({
+                            icon: "success",
+                            title: res.data.message,
+                            });
+                        this.getCart();
+                    }).catch((err) => {
+                        Toast.fire({
+                            icon: "error",
+                            title: err.response.data.message,
+                          });
                     });
-                this.getCart();
-            }).catch((err) => {
-                Toast.fire({
-                    icon: "error",
-                    title: err.response.data.message,
-                  });
-            });
+                };
+              });
         },
         removeCartItem(product_id) {
             axios.delete(`${VITE_URL}/api/${VITE_PATH}/cart/${product_id}`).then((res) => {
