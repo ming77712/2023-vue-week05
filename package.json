@@ -26,5 +26,6 @@
     "eslint-plugin-vue": "^9.17.0",
     "sass": "^1.70.0",
     "vite": "^5.0.11"
-  }
+  },
+  "homepage": "https://ming77712.github.io/2023-vue-week05"
 }

@@ -6,46 +6,27 @@ on:
   push:
     branches: ["main"]
 
-  # 这个选项可以使你手动在 Action tab 页面触发工作流
-  workflow_dispatch:
-
-# 设置 GITHUB_TOKEN 的权限，以允许部署到 GitHub Pages。
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# 允许一个并发的部署
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # 单次部署的工作描述
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Node
-        uses: actions/setup-node@v3
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Install & Build # 執行指令
+        run: |
+          npm install
+          npm run build
+
+      # Runs a single command using the runners shell
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v4
         with:
-          node-version: 18
-          cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install
-      - name: Build
-        run: pnpm run build
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          # Upload dist repository
-          path: "./dist"
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+          ACCESS_TOKEN: ${{ secrets.DEPLOY_SECRET }} # Settings > Secret 建立的 ACCESS_TOKEN，推同個 repo 的話可以不需要
+          BRANCH: gh-pages # deploy 到 gh-pages 這個分支
+          FOLDER: dist # build 後的資料夾
